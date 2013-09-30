@@ -31,6 +31,6 @@ CREATE TABLE event_member (
     event_id    INTEGER,
     member_id   INTEGER,
     created_at  INTEGER,
-    canceled_at INTEGER,
+    canceled_at INTEGER
 );
 
