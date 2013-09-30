@@ -34,7 +34,7 @@ app {
 
 =head1 NAME
 
-Tomalino - Web Application that powered by Nephia
+Tomalino - ATND beta like Web Application
 
 =head1 DESCRIPTION
 
