@@ -1,5 +1,10 @@
 use strict;
 use warnings;
+
+BEGIN {
+    $ENV{PLACK_ENV} = 'test';
+};
+
 use Test::More;
 use Tomalino::Config;
 
