@@ -14,6 +14,8 @@ use lib (
 );
 use NephiaX::Auth::Twitter;
 use Tomalino;
+use Tomalino::M::SessionInfo;
+use Data::Dumper;
 
 my $app           = Tomalino->run;
 my $root          = File::Spec->rel2abs(File::Spec->catdir(dirname(__FILE__)));
@@ -39,7 +41,12 @@ builder {
         consumer_secret => CONSUMER_SECRET,
         handler => sub {
             my ($c, $twitter_id) = @_;
-            ### ここでtwitter_idとセッションを結びつける
+            my $session_id = $c->{cookies}{plack_session};
+            Tomalino::M::SessionInfo->set(
+                provider   => 'twitter',
+                account    => $twitter_id,
+                session_id => $session_id,
+            );
             [302, [Location => '/home'], []];
         },
     );

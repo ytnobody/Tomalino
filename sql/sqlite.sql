@@ -38,3 +38,9 @@ CREATE TABLE event_member (
     PRIMARY KEY(event_id, member_id)
 );
 
+CREATE TABLE session_info (
+    session_id TEXT NOT NULL PRIMARY KEY,
+    member_id  INTEGER NOT NULL,
+    created_at INTEGER
+);
+
