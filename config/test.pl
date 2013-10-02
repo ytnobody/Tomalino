@@ -13,7 +13,8 @@ sub path_to {
 
 # create database file if isn't exists.
 mkdir $dbdir unless -d $dbdir;
-system("sqlite3 $dbfile < $sqlfile") unless -f $dbfile;
+unlink $dbfile if -e $dbfile;
+system("sqlite3 $dbfile < $sqlfile");
 
 {
     DB => ["dbi:SQLite:dbname=$dbfile","",""],

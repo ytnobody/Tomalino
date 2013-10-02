@@ -31,8 +31,8 @@ sub join_event {
 sub fetch {
     my ($class, $id) = @_;
     my $member = Tomalino::DB->select_row('SELECT * FROM member WHERE id=?', $id);
-use Data::Dumper;
-warn Dumper(Tomalino::DB->select_all('SELECT * FROM event WHERE member_id=?', $id));
+    my $events = Tomalino::DB->select_all('SELECT event_id FROM event_member WHERE member_id=?', $id);
+    $member->{events} = $events ? [ map {$_->{event_id}} @$events ] : [];
     return $member;
 }
 
