@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title><?= $arg->{appname} ?> - powered by Nephia</title>
+  <title><?= $arg->{appname} ?> - Attendee Management Service</title>
   <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
 </head>
 <body>
@@ -11,13 +11,18 @@
     <div class="navbar-inner">
       <div class="container">
         <a class="brand" href="/"><?= $arg->{appname} ?></a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li><a href="/login">Login with Twitter</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
   <div class="container">
     <div class="hero-unit">
       <h1><?= $arg->{appname} ?></h1>
-      <p>An web-application that is empowered by Nephia</p>
+      <p>Attendee Management Service</p>
     </div>
   </div>
   <script src="/static/js/jquery.min.js"></script>

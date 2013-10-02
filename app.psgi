@@ -1,5 +1,9 @@
 use strict;
 use warnings;
+
+use constant CONSUMER_KEY    => 'wvHmoU8QaYSDyToWjPRTg';
+use constant CONSUMER_SECRET => 'BcNPiFos6C7AzQ6ZigTaeF5h6QiUP9UvB7y4qVTJOo';
+
 use Plack::Builder;
 use Plack::Session::Store::Cache;
 use Cache::SharedMemoryCache;
@@ -8,6 +12,7 @@ use File::Basename 'dirname';
 use lib (
     File::Spec->catdir(dirname(__FILE__), 'lib'), 
 );
+use NephiaX::Auth::Twitter;
 use Tomalino;
 
 my $app           = Tomalino->run;
@@ -29,6 +34,15 @@ builder {
         ),
     );
     enable 'CSRFBlock';
-    $app;
+    mount '/login' => NephiaX::Auth::Twitter->run(
+        consumer_key    => CONSUMER_KEY,
+        consumer_secret => CONSUMER_SECRET,
+        handler => sub {
+            my ($c, $twitter_id) = @_;
+            ### ここでtwitter_idとセッションを結びつける
+            [302, [Location => '/home'], []];
+        },
+    );
+    mount '/' => $app;
 };
 

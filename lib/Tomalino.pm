@@ -2,6 +2,9 @@ package Tomalino;
 use strict;
 use warnings;
 use File::Spec;
+use Tomalino::M::Member;
+use Tomalino::M::Event;
+use Time::Piece;
 
 our $VERSION = 0.01;
 
@@ -19,12 +22,14 @@ app {
         {template => 'index.html', appname => 'Tomalino'};
     };
 
-    get '/simple' => sub { 
-        [200, [], 'Hello, World!']; 
-    };
-
-    get '/json' => sub { 
-        {message => 'Hello, JSON World'};
+    get '/api/events' => sub { 
+        my $begin_time = localtime->strftime('%Y-%m-%d %H:%M:%S');
+        my $end_time   = localtime(time + (86400*14))->strftime('%Y-%m-%d %H:%M:%S');
+        my $events     = Tomalino::M::Event->search_by_date_range(
+            begin_time => $begin_time,
+            end_time   => $end_time,
+        );
+        {events => $events};
     };
 };
 

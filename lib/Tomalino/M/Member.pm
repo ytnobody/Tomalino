@@ -28,6 +28,18 @@ sub join_event {
     }
 }
 
+sub cancel_event {
+    my ($class, %opts) = @_;
+    my $event_id = $opts{event_id};
+    my $member_id = $opts{member_id};
+    if ( Tomalino::M::Event->fetch($event_id) ) {
+        Tomalino::DB->query(
+            'UPDATE event_member SET canceled = ? WHERE event_id=? AND member_id=?',
+            time(), $event_id, $member_id,
+        );
+    }
+}
+
 sub fetch {
     my ($class, $id) = @_;
     my $member = Tomalino::DB->select_row('SELECT * FROM member WHERE id=?', $id);
