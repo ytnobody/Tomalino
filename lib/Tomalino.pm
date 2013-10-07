@@ -4,6 +4,7 @@ use warnings;
 use File::Spec;
 use Tomalino::M::Member;
 use Tomalino::M::Event;
+use Tomalino::M::SessionInfo;
 use Time::Piece;
 use Plack::Session;
 
@@ -18,21 +19,29 @@ use Nephia plugins => [
     'Dispatch',
 ];
 
+use Data::Dumper;
+
 app {
     my $session = Plack::Session->new(req->env);
+    my $session_data = Tomalino::M::SessionInfo->fetch($session->id);
 
-    ### XXX ここでセッションのバリデーションいれて、だめなら$sessionをundefする
+warn Dumper({ $session->id => $session_data });
 
     get '/' => sub {
-        $session ? 
+        $session_data ? 
             redirect '/home' : 
             {template => 'index.html', appname => 'Tomalino'}
         ;
     };
 
-    ### XXX ユーザーにしかみせたくないページでは$sessionない場合、'/'にとばす
     get '/home' => sub {
+        return redirect('/') unless $session_data;
         { session => $session->id };
+    };
+
+    get '/home/logout' => sub {
+        Tomalino::M::SessionInfo->delete($session->id);
+        redirect '/';
     };
 
     get '/api/events' => sub { 

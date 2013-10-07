@@ -6,6 +6,7 @@ use constant CONSUMER_SECRET => 'BcNPiFos6C7AzQ6ZigTaeF5h6QiUP9UvB7y4qVTJOo';
 
 use Plack::Builder;
 use Plack::Session::Store::Cache;
+use Plack::Session;
 use Cache::SharedMemoryCache;
 use File::Spec;
 use File::Basename 'dirname';
@@ -39,14 +40,14 @@ builder {
         consumer_key    => CONSUMER_KEY,
         consumer_secret => CONSUMER_SECRET,
         handler => sub {
-            my ($c, $twitter_id) = @_;
-            my $session_id = $c->{cookies}{plack_session};
+            my ($context, $twitter_id) = @_;
+            my $session = Plack::Session->new($context->{req}->env);
             Tomalino::M::SessionInfo->set(
                 provider   => 'twitter',
                 account    => $twitter_id,
-                session_id => $session_id,
+                session_id => $session->id,
             );
-            [302, [Location => '/home'], []];
+            [303, [Location => '/home'], []];
         },
     );
     mount '/' => $app;

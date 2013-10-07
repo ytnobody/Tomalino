@@ -23,4 +23,9 @@ sub fetch {
     Tomalino::DB->select_row('SELECT * FROM session_info WHERE session_id=?', $session_id);
 }
 
+sub delete {
+    my ($class, $session_id) = @_;
+    Tomalino::DB->query('DELETE FROM session_info WHERE session_id=?', $session_id);
+}
+
 1;
