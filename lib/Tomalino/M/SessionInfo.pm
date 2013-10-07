@@ -2,17 +2,19 @@ package Tomalino::M::SessionInfo;
 use strict;
 use warnings;
 use Tomalino::DB;
+use Tomalino::M::Member;
 
 sub set {
     my ($class, %opts) = @_;
     $opts{updated_at} = time;
     my @keys  = keys %opts;
-    my $cols  = join(',', map{'"'. $_. '"'} @keys);
-    my $binds = join(',', map{'?'} @keys);
-    my @vals  = map {$opts{$_}} @keys;
+    my $member = Tomalino::M::Member->fetch_or_create(
+        provider => $opts{provider},
+        account  => $opts{account},
+    );
     Tomalino::DB->query(
-        sprintf('REPLACE INTO session_info (%s) VALUES (%s)', $cols, $binds), 
-        @vals
+        'REPLACE INTO session_info (session_id, member_id, updated_at) VALUES (?, ?, ?)',
+        $opts{session_id}, $member->{id}, time
     );
 }
 

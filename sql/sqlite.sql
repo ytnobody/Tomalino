@@ -41,6 +41,6 @@ CREATE TABLE event_member (
 CREATE TABLE session_info (
     session_id TEXT NOT NULL PRIMARY KEY,
     member_id  INTEGER NOT NULL,
-    created_at INTEGER
+    updated_at INTEGER
 );
 

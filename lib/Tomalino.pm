@@ -22,6 +22,10 @@ app {
         {template => 'index.html', appname => 'Tomalino'};
     };
 
+    get '/home' => sub {
+        { env => req->env };
+    };
+
     get '/api/events' => sub { 
         my $begin_time = localtime->strftime('%Y-%m-%d %H:%M:%S');
         my $end_time   = localtime(time + (86400*14))->strftime('%Y-%m-%d %H:%M:%S');

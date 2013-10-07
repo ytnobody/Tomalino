@@ -58,4 +58,37 @@ sub delete {
     };
 }
 
+sub retrieve_member_service {
+    my ($class, %opts) = @_;
+    my $provider = $opts{provider};
+    my $account  = $opts{account};
+    Tomalino::DB->select_row(
+        'SELECT * FROM member_service WHERE service=? AND account_on_service=?',
+        $provider, $account
+    );
+}
+
+sub fetch_or_create {
+    my ($class, %opts) = @_;
+    my $provider = $opts{provider};
+    my $account  = $opts{account};
+    my $service  = $class->retrieve_member_service(%opts);
+    return $class->fetch($service->{member_id}) if $service;
+    do {
+        my $txn    = Tomalino::DB->txn_scope;
+        my $member = $class->create(name => $account);
+        if ($member) {
+            my $now = time;
+            Tomalino::DB->query(
+                'INSERT INTO member_service (member_id, service, account_on_service, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+                $member->{id}, $provider, $account, $now, $now
+            );
+            if ( $class->retrieve_member_service(%opts) ) {
+                $txn->commit;
+                $member;
+            }
+        }
+    };
+}
+
 1;
