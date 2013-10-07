@@ -21,6 +21,8 @@ use Nephia plugins => [
 app {
     my $session = Plack::Session->new(req->env);
 
+    ### XXX ここでセッションのバリデーションいれて、だめなら$sessionをundefする
+
     get '/' => sub {
         $session ? 
             redirect '/home' : 
@@ -28,6 +30,7 @@ app {
         ;
     };
 
+    ### XXX ユーザーにしかみせたくないページでは$sessionない場合、'/'にとばす
     get '/home' => sub {
         { session => $session->id };
     };
