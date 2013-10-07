@@ -15,7 +15,6 @@ use lib (
 use NephiaX::Auth::Twitter;
 use Tomalino;
 use Tomalino::M::SessionInfo;
-use Data::Dumper;
 
 my $app           = Tomalino->run;
 my $root          = File::Spec->rel2abs(File::Spec->catdir(dirname(__FILE__)));

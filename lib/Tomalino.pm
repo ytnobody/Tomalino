@@ -5,6 +5,7 @@ use File::Spec;
 use Tomalino::M::Member;
 use Tomalino::M::Event;
 use Time::Piece;
+use Plack::Session;
 
 our $VERSION = 0.01;
 
@@ -18,12 +19,17 @@ use Nephia plugins => [
 ];
 
 app {
+    my $session = Plack::Session->new(req->env);
+
     get '/' => sub {
-        {template => 'index.html', appname => 'Tomalino'};
+        $session ? 
+            redirect '/home' : 
+            {template => 'index.html', appname => 'Tomalino'}
+        ;
     };
 
     get '/home' => sub {
-        { env => req->env };
+        { session => $session->id };
     };
 
     get '/api/events' => sub { 
